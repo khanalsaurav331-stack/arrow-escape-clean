@@ -153,27 +153,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // Coins counter (replaced water drops with coins icon)
-                    Row(
-                      children: [
-                        const Icon(
-                          LucideIcons.coins,
-                          color: Color(0xFFF1C40F), // Premium gold coin color
-                          size: 22,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          '${progress.coins}',
-                          style: GoogleFonts.nunito(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
 
                     Row(
                       children: [

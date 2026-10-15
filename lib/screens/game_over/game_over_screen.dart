@@ -95,24 +95,9 @@ class GameOverScreen extends StatelessWidget {
                   },
                 ).animate(delay: 500.ms).fadeIn().slideY(begin: 0.3),
 
-                const SizedBox(height: 14),
+                const SizedBox(height: 24),
 
-                // 2. Secondary Action: Restart Level (Start fresh with 3 lives)
-                _ActionButton(
-                  icon: LucideIcons.rotateCcw,
-                  label: 'Restart Level',
-                  subtitle: 'Start over with 3 lives',
-                  gradient: LinearGradient(
-                      colors: [AppColors.surfaceLight, AppColors.surface]),
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, '/game',
-                        arguments: {'level': levelNumber});
-                  },
-                ).animate(delay: 600.ms).fadeIn().slideY(begin: 0.3),
-
-                const SizedBox(height: 14),
-
-                // 3. Navigation Action: Back to menu
+                // 2. Navigation Action: Back to menu
                 TextButton(
                   onPressed: () {
                     AudioManager.instance.playClick();
@@ -121,7 +106,7 @@ class GameOverScreen extends StatelessWidget {
                   child: Text('Main Menu',
                       style: GoogleFonts.nunito(
                           color: AppColors.textSecondary, fontSize: 16)),
-                ).animate(delay: 700.ms).fadeIn(),
+                ).animate(delay: 600.ms).fadeIn(),
               ],
             ),
           ),
@@ -184,7 +169,7 @@ class _ActionButton extends StatelessWidget {
               ],
             ),
           ],
-        ),
+         ),
       ),
     );
   }

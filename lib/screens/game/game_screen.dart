@@ -1661,34 +1661,6 @@ class _LevelCompleteDialog extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Score
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-              decoration: BoxDecoration(
-                color: AppColors.accentGold.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                    color: AppColors.accentGold.withValues(alpha: 0.3)),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    LucideIcons.coins,
-                    color: Color(0xFFE2B93C),
-                    size: 22,
-                  ),
-                  const SizedBox(width: 8),
-                  Text('+$score',
-                      style: GoogleFonts.nunito(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.accentGold)),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
             // Next Level button or Game Completed message
             if (level.levelNumber == 500) ...[
               Container(
@@ -1741,19 +1713,6 @@ class _LevelCompleteDialog extends StatelessWidget {
                 icon: Icons.play_arrow_rounded,
                 gradient: AppColors.primaryGradient,
                 onTap: onNextLevel,
-              ),
-              const SizedBox(height: 10),
-            ],
-
-            // Double coins (rewarded ad)
-            if (_showAds) ...[
-              _DialogButton(
-                label: 'Double Coins',
-                icon: LucideIcons.clapperboard,
-                gradient: AppColors.secondaryGradient,
-                textColor: AppColors.textPrimary,
-                iconColor: AppColors.textPrimary,
-                onTap: onDoubleCoins,
               ),
               const SizedBox(height: 10),
             ],
@@ -1815,59 +1774,50 @@ class _GameOverDialog extends StatelessWidget {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isTimeout ? LucideIcons.hourglass : LucideIcons.heartOff,
-              color: AppColors.accent,
-              size: 52,
-            ).animate().shake(duration: 500.ms),
-            const SizedBox(height: 12),
-            Text(isTimeout ? 'Out of Time!' : 'Out of Lives!',
-                style: GoogleFonts.nunito(
+              children: [
+                Icon(
+                  isTimeout ? LucideIcons.hourglass : LucideIcons.heartOff,
+                  color: AppColors.accent,
+                  size: 52,
+                ).animate().shake(duration: 500.ms),
+                
+                const SizedBox(height: 12),
+                
+                Text(
+                  isTimeout ? 'Out of Time!' : 'Out of Lives!',
+                  style: GoogleFonts.nunito(
                     fontSize: 26,
                     fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary)),
-            const SizedBox(height: 20),
-            // Continue with ad
-            if (_showAds) ...[
-              Text(
-                  isTimeout
-                      ? 'Watch an ad to get +$continueTime seconds and continue'
-                      : 'Watch an ad to get 1 more life and continue',
-                  style: GoogleFonts.nunito(
-                      fontSize: 13, color: AppColors.textSecondary)),
-              const SizedBox(height: 28),
-              _DialogButton(
-                label: isTimeout
-                    ? 'Get +$continueTime Seconds & Continue'
-                    : 'Get 1 More Life & Continue',
-                icon: LucideIcons.clapperboard,
-                gradient: AppColors.successGradient,
-                onTap: onContinue,
-              ),
-              const SizedBox(height: 10),
-            ],
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                
+                const SizedBox(height: 20),
+                // 1. Primary Clean Action: Revive & Continue Card Layout
+                // 1. Primary Clean Action: Revive & Continue Card Layout
+                _DialogButton(
+                  label: isTimeout
+                      ? 'Get +${continueTime}s & Continue'
+                      : 'Revive & Continue',
+                  icon: isTimeout ? LucideIcons.hourglass : LucideIcons.heartHandshake,
+                  gradient: AppColors.successGradient,
+                  onTap: onContinue,
+                ),
 
-            // Restart (all lives back)
-            _DialogButton(
-              label: 'Restart Level',
-              icon: Icons.refresh_rounded,
-              gradient: AppColors.secondaryGradient,
-              textColor: AppColors.textPrimary,
-              iconColor: AppColors.textPrimary,
-              onTap: onRestart,
-            ),
-            const SizedBox(height: 10),
+                const SizedBox(height: 14),
 
-            TextButton(
-              onPressed: () {
-                AudioManager.instance.playClick();
-                onMenu();
-              },
-              child: Text('Main Menu',
-                  style: GoogleFonts.nunito(color: AppColors.textSecondary)),
-            ),
-          ],
+                // 2. Secondary Navigation Action: Return to main menu interface text link
+                TextButton(
+                  onPressed: onMenu,
+                  child: Text(
+                    'Main Menu',
+                    style: GoogleFonts.nunito(
+                      color: AppColors.textSecondary,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
         ),
       ),
     );
