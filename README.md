@@ -279,3 +279,8 @@ static const int interstitialEveryNLevels = 4;
     <img src="https://api.star-history.com/svg?repos=gtxPrime/arrow-escape&type=Date&theme=dark" alt="Star History Chart" />
   </a>
 </div>
+
+---
+
+## Credits & Attributions
+This project is built upon the open-source puzzle game framework originally created by [@gtxPrime](https://github.com). Modified, rebranded, and customized by [@VxStudios](https://github.com). https://github.com/khanalsaurav331-stack
