@@ -1,0 +1,128 @@
+# Miscellaneous
+*.class
+*.log
+*.txt
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate.yaml
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The Flutter/Dart SDK related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+**/build/
+release_builds/
+
+
+# Web related
+.web/
+
+# Symbolica link to Flame assets (if any)
+assets/images/spritesheet.png
+
+# Android related
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/.gradle
+**/android/app/local.properties
+**/android/app/GeneratedPluginRegistrant.java
+**/android/app/proguard-rules.pro
+**/android/app/src/main/assets/
+**/android/key.properties
+**/*.jks
+**/*.keystore
+**/*.ap_
+**/*.apk
+**/*.aab
+
+# iOS related
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/flutter_settings.json
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_plugins/
+**/ios/Flutter/ephemeral/
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/GeneratedPluginRegistrant.h
+**/ios/Flutter/GeneratedPluginRegistrant.m
+**/ios/.symlinks/
+**/ios/Pods/
+**/ios/.xcworkspace/
+**/ios/Podfile.lock
+**/.xcworkspace/
+**/ios/**/GeneratedPluginRegistrant.m
+**/ios/**/GeneratedPluginRegistrant.h
+
+# macOS related
+**/macos/Flutter/ephemeral/
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/macos/Flutter/flutter_export_environment.sh
+**/macos/Flutter/flutter_plugins/
+**/macos/Flutter/Generated.xcconfig
+**/macos/Podfile.lock
+**/macos/Pods/
+**/macos/.symlinks/
+**/macos/.xcworkspace/
+
+# Linux related
+**/linux/flutter/ephemeral/
+**/linux/flutter/generated_plugins/
+
+# Windows related
+**/windows/flutter/ephemeral/
+**/windows/flutter/generated_plugins/
+
+# Coverage
+coverage/
+
+# Generate Progress Logs
+assets/generate_progress*.txt
+assets/generate_progress*.log
+assets/levels_*_*.bin
+*_log.txt
+*.log
+assets/verify_progress_chunk_*.json
+verify_progress_chunk_*.json
+verify_chunk*.txt
+attempt_log.txt
+
+# Local Generator & Parallel Execution Utilities
+bin/
+run_parallel.ps1
+test/debug_test.dart
+test/generate_and_verify_test.dart
+test/merge_chunks_test.dart
+test/verify_all_levels_test.dart
+test/verify_bin_solvability_test.dart
+
+# Sensitive Local Secrets
+lib/core/ad_secrets.dart
+google-services.json
+**/google-services.json
+GoogleService-Info.plist
+**/GoogleService-Info.plist
+
+# Brag & HyperFrames Output
+brag-output/
+.hyperframes/
+*.mp4
+
+# Agents Folder
+.agents/
+

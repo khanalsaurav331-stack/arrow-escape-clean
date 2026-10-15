@@ -1,0 +1,158 @@
+// Core game constants
+class AppConstants {
+  AppConstants._();
+
+  // App identity
+  static const String appName = 'Arrow Escape';
+  static const String packageId = 'com.arrowx.escape';
+
+  // Grid sizes: 10×10 minimum at level 1, up to 35×35 target (hard cap 40).
+  // • Normal: 10×10 at level 4 → 35×35 around level 300+
+  // • Boss:   20×20 at first boss → 30×30 at high cycles
+  // • God:    22×22 at first god  → 35×35 at high cycles
+  static const int startingGridSize = 10;
+  static const int maxGridSize = 40;
+  static const int tutorialLevels = 3;
+
+  // Lives
+  static const int maxLives = 3;
+
+  // Ad Network Feature Toggles
+  static const bool enableAdMob = false;
+  static const bool enableUnityAds = false;
+  static const bool enableAppLovin = false;
+
+  static const int interstitialEveryNLevels = 4;
+
+  // Animation durations
+  static const Duration arrowSlideDuration = Duration(milliseconds: 220);
+  // arrowExitDuration is now dynamic (based on path length) — this is the base
+  static const Duration arrowExitDuration = Duration(milliseconds: 400);
+  static const Duration arrowShakeDuration = Duration(milliseconds: 400);
+  static const Duration levelCompleteDuration = Duration(milliseconds: 200);
+
+  // Scoring
+  static const int baseScore = 100;
+  static const int bonusPerRemainingLife = 50;
+  static const int bossBonus = 200;
+  static const int godBonus = 500;
+
+  // Streak milestones
+  static const int streakMilestone1 = 7;
+  static const int streakMilestone2 = 30;
+  static const int streakMilestone3 = 100;
+
+  /// How many boss levels have occurred up to and including [level].
+  static int bossCycleCount(int level) {
+    if (level <= tutorialLevels) return 0;
+    int count = 0;
+    for (int l = tutorialLevels + 1; l <= level; l++) {
+      if (levelTypeFor(l) == LevelType.boss) count++;
+    }
+    return count;
+  }
+
+  /// How many god levels have occurred up to and including [level].
+  static int godCycleCount(int level) {
+    if (level <= tutorialLevels) return 0;
+    int count = 0;
+    for (int l = tutorialLevels + 1; l <= level; l++) {
+      if (levelTypeFor(l) == LevelType.god) count++;
+    }
+    return count;
+  }
+
+  /// Grid size for a given level number.
+  ///   Tutorial :  10×10 (fixed small canvas for guidance)
+  ///   Normal   :  15×15 minimum at level 4, ramps to 24×24 at level 19
+  ///               25×25 minimum at level 20, ramps to 35×35 at level 500
+  ///   Boss     :  27×27 minimum at 1st cycle, ramps to 40×40 at cycle ~20
+  ///   God      :  27×27 minimum at 1st cycle, ramps to 40×40 at cycle ~20
+  static int gridSizeForLevel(int level) {
+    if (level <= tutorialLevels) return 10;
+
+    final type = levelTypeFor(level);
+
+    if (type == LevelType.boss) {
+      // Scale 27 → 40 over ~20 boss cycles, then hold at 40.
+      final cycle = bossCycleCount(level);
+      final raw = 27 + ((cycle - 1) * (13.0 / 19.0)).round();
+      return raw.clamp(27, 40);
+    }
+
+    if (type == LevelType.god) {
+      // Scale 27 → 40 over ~20 god cycles, then hold at 40.
+      final cycle = godCycleCount(level);
+      final raw = 27 + ((cycle - 1) * (13.0 / 19.0)).round();
+      return raw.clamp(27, 40);
+    }
+
+    // Normal levels:
+    if (level < 20) {
+      // Level 4 to 19: min 15, scale gently up to 24.
+      final raw = 15 + ((level - 4) * (9.0 / 15.0)).round();
+      return raw.clamp(15, 24);
+    } else {
+      // Level 20+: min 25, scale up to 35.
+      final raw = 25 + ((level - 20) * (10.0 / 480.0)).round();
+      return raw.clamp(25, 35);
+    }
+  }
+
+  /// Returns the level type: tutorial, god, boss, or normal.
+  ///
+  /// Post-tutorial pattern repeats every 7 levels:
+  ///   [N, N, N, Boss, N, N, God]
+  ///   pos 1-3 → Normal
+  ///   pos 4   → Boss
+  ///   pos 5-6 → Normal
+  ///   pos 7   → God
+  static LevelType levelTypeFor(int level) {
+    if (level <= tutorialLevels) return LevelType.tutorial;
+    // position within the 7-level cycle (1-indexed)
+    final pos = ((level - tutorialLevels - 1) % 7) + 1;
+    if (pos == 7) return LevelType.god;
+    if (pos == 4) return LevelType.boss;
+    return LevelType.normal;
+  }
+
+  /// Clean standalone helper: true when n is a boss level.
+  static bool isBossLevel(int n) => levelTypeFor(n) == LevelType.boss;
+
+  /// True for god levels.
+  static bool isGodLevel(int n) => levelTypeFor(n) == LevelType.god;
+
+  /// Canvas scale factor: higher scale factor zooms in default game canvas area.
+  static double canvasScaleForType(LevelType type) {
+    switch (type) {
+      case LevelType.god:
+        return 0.97;
+      case LevelType.boss:
+        return 0.97;
+      default:
+        return 1.2;
+    }
+  }
+}
+
+enum LevelType {
+  tutorial,
+  normal,
+  boss,
+  god;
+
+  String get label {
+    switch (this) {
+      case LevelType.tutorial:
+        return 'Tutorial';
+      case LevelType.normal:
+        return '';
+      case LevelType.boss:
+        return 'Boss';
+      case LevelType.god:
+        return 'God';
+    }
+  }
+
+  bool get isSpecial => this == LevelType.boss || this == LevelType.god;
+}
