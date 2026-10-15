@@ -4,8 +4,8 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    //id("com.google.gms.google-services")
+    //id("com.google.firebase.crashlytics")
 }
 
 // Load keystore properties
@@ -20,10 +20,6 @@ val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
-
-val admobAppId = keystoreProperties.getProperty("admobAppId")
-    ?: localProperties.getProperty("admobAppId")
-    ?: "ca-app-pub-3044335875753764~1764036598"
 
 android {
     namespace = "com.arrowx.escape"
@@ -42,7 +38,6 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
-        manifestPlaceholders["admobAppId"] = admobAppId
     }
 
     signingConfigs {

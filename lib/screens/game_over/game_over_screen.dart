@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import '../../core/app_colors.dart';
@@ -80,10 +79,11 @@ class GameOverScreen extends StatelessWidget {
 
                 const SizedBox(height: 48),
 
+                // 1. Primary Action: Revive & Continue (Easy to plug ads here later!)
                 _ActionButton(
-                  icon: LucideIcons.clapperboard,
-                  label: 'Get 1 More Life & Continue',
-                  subtitle: 'Get 1 more life instantly',
+                  icon: LucideIcons.heartHandshake,
+                  label: 'Revive & Continue',
+                  subtitle: 'Get 1 more life to try again',
                   gradient: AppColors.successGradient,
                   onTap: () {
                     if (!context.mounted) return;
@@ -97,7 +97,7 @@ class GameOverScreen extends StatelessWidget {
 
                 const SizedBox(height: 14),
 
-                // Restart level (full lives)
+                // 2. Secondary Action: Restart Level (Start fresh with 3 lives)
                 _ActionButton(
                   icon: LucideIcons.rotateCcw,
                   label: 'Restart Level',
@@ -112,7 +112,7 @@ class GameOverScreen extends StatelessWidget {
 
                 const SizedBox(height: 14),
 
-                // Back to menu
+                // 3. Navigation Action: Back to menu
                 TextButton(
                   onPressed: () {
                     AudioManager.instance.playClick();
