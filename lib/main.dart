@@ -5,9 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'core/constants.dart';
-
 import 'app.dart';
 import 'data/repositories/progress_repository.dart';
 import 'data/repositories/level_repository.dart';

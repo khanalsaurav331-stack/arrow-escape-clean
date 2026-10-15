@@ -3,8 +3,8 @@ class AppConstants {
   AppConstants._();
 
   // App identity
-  static const String appName = 'Arrow Escape';
-  static const String packageId = 'com.arrowx.escape';
+  static const String appName = 'Arrowhift';
+  static const String packageId = 'com.khanalsaurav.Arrowhift';
 
   // Grid sizes: 10×10 minimum at level 1, up to 35×35 target (hard cap 40).
   // • Normal: 10×10 at level 4 → 35×35 around level 300+

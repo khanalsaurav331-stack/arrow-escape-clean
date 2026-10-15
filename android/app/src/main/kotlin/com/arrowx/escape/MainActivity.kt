@@ -1,4 +1,4 @@
-package com.arrowx.escape
+package com.khanalsaurav.Arrowhift
 
 import android.os.Bundle
 import androidx.core.view.WindowCompat

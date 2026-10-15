@@ -188,7 +188,7 @@ class _SplashScreenState extends State<SplashScreen>
             .scale(begin: const Offset(0.8, 0.8), end: const Offset(1, 1)),
         const SizedBox(height: 16),
         Text(
-          'Arrow Out',
+          'Arrowhift',
           style: GoogleFonts.nunito(
             fontSize: 42,
             fontWeight: FontWeight.w900,

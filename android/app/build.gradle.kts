@@ -22,7 +22,7 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.arrowx.escape"
+    namespace = "com.khanalsaurav.Arrowhift"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -32,7 +32,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.arrowx.escape"
+        applicationId = "com.khanalsaurav.Arrowhift"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -76,7 +76,7 @@ flutter {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.20")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.3.20")
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.activity:activity-ktx:1.9.3")
     implementation("androidx.multidex:multidex:2.0.1")
