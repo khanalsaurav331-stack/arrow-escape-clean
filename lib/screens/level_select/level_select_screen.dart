@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
-
 import '../../core/app_colors.dart';
 import '../../core/constants.dart';
 import '../../data/repositories/progress_repository.dart';
@@ -16,7 +15,9 @@ class LevelSelectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = context.watch<ProgressRepository>();
-    const totalVisible = 500; // Show first 500 levels
+    
+    // --- UPDATED CAP CONSTRAINT VALUE ---
+    const totalVisible = 600; // Expanded from 500 to seamlessly view all 600 levels
 
     return Scaffold(
       body: Container(
@@ -154,54 +155,84 @@ class _LevelCell extends StatelessWidget {
                 ]
               : null,
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Level type badge
-            if (levelType == LevelType.god)
-              Icon(LucideIcons.flame, color: AppColors.accent, size: 12)
-            else if (levelType == LevelType.boss)
-              const Icon(LucideIcons.zap, color: Color(0xFF8E44AD), size: 12)
-            else if (levelType == LevelType.tutorial)
-              Icon(LucideIcons.bookOpen, color: AppColors.accentGreen, size: 12),
-
-            if (!isUnlocked)
-              Icon(Icons.lock_outline_rounded,
-                  color: AppColors.textMuted, size: 20)
-            else
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text('$levelNumber',
-                      style: GoogleFonts.nunito(
-                        fontSize: levelNumber >= 100 ? 13 : 16,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.textPrimary,
-                      )),
-                ),
-              ),
-
-            // Stars
-            if (isUnlocked && stars > 0) ...[
-              const SizedBox(height: 4),
-              Row(
+        child: isUnlocked 
+            ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                    3,
-                    (i) => Text(
-                          i < stars ? '⭐' : '·',
-                          style: TextStyle(
-                            fontSize: i < stars ? 8 : 10,
-                            color: i < stars
-                                ? AppColors.starYellow
-                                : AppColors.textMuted,
-                          ),
-                        )),
+                children: [
+                  // Level type badge (Only shown on unlocked stages to keep grid clean)
+                  if (levelType == LevelType.god)
+                    Icon(LucideIcons.flame, color: AppColors.accent, size: 12)
+                  else if (levelType == LevelType.boss)
+                    const Icon(LucideIcons.zap, color: Color(0xFF8E44AD), size: 12)
+                  else if (levelType == LevelType.tutorial)
+                    Icon(LucideIcons.bookOpen, color: AppColors.accentGreen, size: 12)
+                  else
+                    const SizedBox(height: 12), // Unified offset padding spacer
+
+                  const SizedBox(height: 2),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        '$levelNumber',
+                        style: GoogleFonts.nunito(
+                          fontSize: levelNumber >= 100 ? 14 : 17,
+                          fontWeight: FontWeight.w900, // Big bold emphasis sizing text look
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Stars Completion Row tracking
+                  const SizedBox(height: 4),
+                  if (stars > 0)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                          3,
+                          (i) => Text(
+                                i < stars ? '⭐' : '·',
+                                style: TextStyle(
+                                  fontSize: i < stars ? 8 : 10,
+                                  color: i < stars
+                                      ? AppColors.starYellow
+                                      : AppColors.textMuted,
+                                ),
+                              )),
+                    )
+                  else
+                    const SizedBox(height: 12), // Preserves alignment matching layout cells
+                ],
+              )
+            : Stack(
+                alignment: Alignment.center,
+                children: [
+                  // 1. Subtle micro indicator text placed at the top
+                  Positioned(
+                    top: 10,
+                    child: Text(
+                      '$levelNumber',
+                      style: GoogleFonts.nunito(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textMuted.withValues(alpha: 0.35), // Sleek, low-contrast subtle text
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ),
+                  // 2. Centered lock icon pushed slightly down for proportional balance
+                  Positioned(
+                    bottom: 12,
+                    child: Icon(
+                      Icons.lock_outline_rounded,
+                      color: AppColors.textMuted.withValues(alpha: 0.45),
+                      size: 16,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ],
-        ),
       ),
     );
   }

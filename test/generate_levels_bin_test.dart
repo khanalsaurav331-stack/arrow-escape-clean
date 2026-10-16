@@ -1,75 +1,102 @@
 // ignore_for_file: avoid_print
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:arrow_escape/data/level_generator/level_generator_v2.dart';
 import 'package:arrow_escape/data/level_binary_codec.dart';
 import 'package:arrow_escape/data/models/level.dart';
 
-/// Generates all 500 levels and writes them to assets/levels.bin
-/// in a compact binary format.
+/// Reads the existing verified 500 levels from assets/levels.bin,
+/// dynamically appends the shifted layout loop for stages 501-600,
+/// and saves the updated 600-stage asset pack back to assets/levels.bin.
 ///
 /// Run from project root:
 ///   flutter test test/generate_levels_bin_test.dart -r expanded
 void main() {
-  test('Generate and encode all 500 levels to assets/levels.bin', () {
+  test('Generate and encode all 600 levels to assets/levels.bin', () {
     print('──────────────────────────────────────────────');
     print(' Arrow Puzzle — Binary Level Pre-generator');
     print('──────────────────────────────────────────────');
 
-    const totalLevels = 100;
     final levels = <LevelModel>[];
     final sw = Stopwatch()..start();
 
-    for (int i = 1; i <= totalLevels; i++) {
-      final levelSw = Stopwatch()..start();
-      final level = LevelGeneratorV2.generateLevel(i);
-      levelSw.stop();
+    final binPath = 'assets/levels.bin';
+    final binFile = File(binPath);
 
-      levels.add(level);
+    if (!binFile.existsSync()) {
+      fail('Could not find baseline binary file at "$binPath". Please run your chunk generator or verification tests first to build the base 500 levels.');
+    }
 
-      final isBossOrGod = level.patternName.startsWith('Boss') ||
-          level.patternName.startsWith('God');
-      if (isBossOrGod || i % 25 == 0 || i == totalLevels) {
-        final ms = levelSw.elapsedMilliseconds;
-        final timeStr =
-            ms > 1000 ? '${(ms / 1000).toStringAsFixed(1)}s' : '${ms}ms';
-        print(
-            'Level ${'$i'.padLeft(3)} / $totalLevels  '
-            '[${level.patternName.padRight(12)}]  '
-            '${level.arrows.length.toString().padLeft(3)} arrows  '
-            '${level.gridSize}×${level.gridSize}  '
-            '$timeStr');
+    print('Reading baseline levels from $binPath...');
+    try {
+      final inputBytes = binFile.readAsBytesSync();
+      final decoder = LevelBinaryDecoder.fromBytes(inputBytes);
+      
+      // Extract the original 500 levels
+      for (int i = 1; i <= 500; i++) {
+        final decodedLevel = decoder.decodeLevelByNumber(i);
+        if (decodedLevel != null) {
+          levels.add(decodedLevel);
+        } else {
+          print('  Warning: Could not decode level $i from binary asset.');
+        }
       }
+    } catch (e) {
+      fail('Failed parsing original binary file content: $e');
+    }
+
+    print('Successfully extracted ${levels.length} base levels from your binary asset.');
+
+    // 2. Generate levels 501 to 600 using the Shifted Layout Loop Offset
+    print('Generating shifted progression loop for levels 501-600...');
+    for (int i = 501; i <= 600; i++) {
+      // Safely map index 501-600 to validated patterns from levels 201-300
+      final shiftedTargetIndex = 201 + ((i - 501) % 100);
+      
+      // Find the baseline template from our extracted list array
+      final baseLevel = levels.firstWhere(
+        (l) => l.levelNumber == shiftedTargetIndex,
+        orElse: () => fail('Failed to find level $shiftedTargetIndex in the extracted binary data.'),
+      );
+      
+      // Clone into a fresh progressive LevelModel instance
+      final shiftedLevel = LevelModel(
+        levelNumber: i,
+        gridSize: baseLevel.gridSize,
+        patternName: 'Shift-${baseLevel.patternName}',
+        arrows: baseLevel.arrows.map((a) => a.copyWith()).toList(),
+        difficulty: baseLevel.difficulty,
+      );
+      
+      levels.add(shiftedLevel);
+    }
+
+    // Sort to verify absolute sequence continuity
+    levels.sort((a, b) => a.levelNumber.compareTo(b.levelNumber));
+
+    // Print a quick visual sampling check to the terminal
+    print('\n--- Verification Sample Matrix Check ---');
+    for (final lvl in levels.where((l) => l.levelNumber % 50 == 0 || l.levelNumber > 595)) {
+      print('Level ${lvl.levelNumber.toString().padLeft(3)} '
+            '[${lvl.patternName.padRight(12)}] '
+            '${lvl.arrows.length.toString().padLeft(3)} arrows '
+            '${lvl.gridSize}×${lvl.gridSize}');
     }
 
     sw.stop();
     print('');
-    print('Generation complete: ${sw.elapsed.inSeconds}s for $totalLevels levels');
+    print('Generation complete: ${sw.elapsed.inSeconds}s for ${levels.length} total levels');
 
-    // Encode to binary
-    print('Encoding to binary...');
+    // 3. Encode the updated 600 levels list directly back to binary format
+    print('Encoding 600 levels back to binary...');
     final encodeSw = Stopwatch()..start();
-    final bytes = encodeLevels(levels);
+    final outputBytes = encodeLevels(levels);
     encodeSw.stop();
 
-    final outPath = 'assets/levels.bin';
-    File(outPath).writeAsBytesSync(bytes);
+    binFile.writeAsBytesSync(outputBytes);
 
-    final kbSize = (bytes.length / 1024).toStringAsFixed(1);
-    print('Written: $outPath (${kbSize} KB, ${bytes.length} bytes)');
+    final kbSize = (outputBytes.length / 1024).toStringAsFixed(1);
+    print('Written: $binPath (${kbSize} KB, ${outputBytes.length} bytes)');
     print('Encoding time: ${encodeSw.elapsedMilliseconds}ms');
-
-    // Compare to JSON if present
-    final jsonFile = File('assets/levels.json');
-    if (jsonFile.existsSync()) {
-      final jsonKb = (jsonFile.lengthSync() / 1024).toStringAsFixed(1);
-      final ratio = (jsonFile.lengthSync() / bytes.length).toStringAsFixed(1);
-      print('');
-      print('Size comparison:');
-      print('  levels.json : $jsonKb KB');
-      print('  levels.bin  : $kbSize KB');
-      print('  Reduction   : ${ratio}× smaller ✓');
-    }
 
     print('');
     print('Done! ✓');

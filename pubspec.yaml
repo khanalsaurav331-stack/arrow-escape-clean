@@ -54,6 +54,7 @@ flutter:
     - assets/audio/
     - assets/fonts/
     - assets/levels.bin
+    - assets/level_chunks/
 
   fonts:
     - family: Nunito
