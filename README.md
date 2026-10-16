@@ -283,4 +283,4 @@ static const int interstitialEveryNLevels = 4;
 ---
 
 ## Credits & Attributions
-This project is built upon the open-source puzzle game framework originally created by [@gtxPrime](https://github.com). Modified, rebranded, and customized by [@VxStudios](https://github.com). https://github.com/khanalsaurav331-stack
+This project is built upon the open-source puzzle game framework originally created by [@gtxPrime](https://github.com)  https://github.com/gtxPrime/arrow-escape . Modified, rebranded, and customized by [@VxStudios](https://github.com). https://github.com/khanalsaurav331-stack
