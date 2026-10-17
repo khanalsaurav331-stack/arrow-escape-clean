@@ -45,6 +45,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
   flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.4 # 1. Added the official splash screen builder package
 
 flutter:
   uses-material-design: true
@@ -67,9 +68,19 @@ flutter:
         - asset: assets/fonts/Nunito-Black.ttf
           weight: 900
 
+# 2. Corrected Launcher Settings (Changes phone search icon border from beige to dark green)
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: false
   image_path: "assets/images/logo.png"
-  adaptive_icon_background: "#FAF6F0"
+  # 1. Keeps the solid dark green fill completely safe and flat to the outer edges
+  adaptive_icon_background: "#0d140e" 
+  # 2. Points to your master icon file as the floating floating foreground layer
   adaptive_icon_foreground: "assets/images/logo.png"
+
+# 3. Added Splash Screen Engine (Overwrites the beige boot sequence permanently)
+flutter_native_splash:
+  color: "#0d140e" # Deep premium dark olive-green
+  image: "assets/images/logo.png" # Your new 1024x1024 maze icon
+  android_12:
+    color: "#0d140e"
